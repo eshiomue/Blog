@@ -16,8 +16,32 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-jet-welcome />
+
+             <table class="table table-striped" cellpadding="10">
+			    <tr style="font-weight: bold;">
+                    <td> Number </td>
+                    <td> User </td>
+                    <td> Post </td>
+                    <td>Picture</td>
+                    <td colspan="2">Manage</td>
+            	</tr>
+                 <?php $count = 0; ?>
+               
+		    </table>
+           
             </div>
         </div>
     </div>
 </x-main-layout>
+
+<style>
+    .alert {
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        width: 17%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>

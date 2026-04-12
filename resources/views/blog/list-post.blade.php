@@ -10,9 +10,10 @@
 				<td> Content </td>
 				<td> Posted_by</td>
 				<td> Category </td>
-				@if(Auth::user()->user_type == 'admin')
-					<td colspan="2">Manage</td>
-				@endif
+				<td> Photo</td>
+				<td>Comments</td>
+				<td colspan="2">Manage</td>
+				
 			</tr>
 			<?php $count = 0; ?>
 			@foreach($blogs as $item)
@@ -22,21 +23,20 @@
 					<td>  <a href="/post/view/{{$item->id}}"> {{$item->title}} </a></td>
 					<td> {{ substr($item->content, 0,100) }}... </td>
 					<td> 
-						<?php
-						$user = App\Models\User::where('id', $item->posted_by)->first();
-						echo($user->name);
-						?>
+						{{ $item->user != null ? $item->user->name : "-" }}
 					</td>
 					<td> 
-						<?php
-						$category = App\Models\BlogCategory::where('id', $item->category_id)->first();
-						if(!is_null($category)) echo($category->title);
-						?>
+						{{ $item->category != null ? $item->category->title : ""  }}						
 					</td>
-					@if(Auth::user()->user_type == 'admin')
+					<td>
+						<img src="<?php echo('/' . $item->picture); ?>" width="50" height="50">
+					</td>
+					<td>
+						{{ $item->comments != null ? count($item->comments) : 0 }}
+					</td>
 						<td><a href="/edit-post/<?php echo($item->id);?>" class="btn btn-primary">Edit</a></td>
 						<td><button class="btn btn-danger" onClick ="askDeleteQuestion(<?php echo($item->id);?>)">Delete</button></td>
-					@endif
+
 				</tr>
 			@endforeach
 		</table>

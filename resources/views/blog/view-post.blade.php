@@ -8,10 +8,7 @@
 			<p>{{$post->content}}</p>	
 
 			<span style="font-weight:bold; font-style: italic;"> Created by: 
-			<?php
-			$user = App\Models\User::where('id', $post->posted_by)->first();
-			echo($user->name);
-			?>		
+				{{ $post->user != null ? $post->user->name : ''}}
 			</span> 
 
 			<span style="font-weight:bold; font-style: italic;">

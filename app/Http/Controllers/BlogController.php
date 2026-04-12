@@ -48,7 +48,7 @@ class BlogController extends Controller
 
     }
     public function ListPost(){
-        $blogs = Blog::all();
+        $blogs = Blog::with('category', 'comment')->get();
         return view('blog.list-post', compact('blogs'));
 
     }
@@ -75,9 +75,9 @@ class BlogController extends Controller
         return redirect()->to('/post/list-post');
 
     }
-
+ 
     public function viewPost($id){
-        $post = Blog::with('comment', 'comment.user')->where('id',$id)->first();
+        $post = Blog::with('comment', 'user', 'comment.user')->where('id',$id)->first();
         if(is_null($post)){
             $notification = array(
                 'message' => 'Was not found ',
@@ -104,7 +104,7 @@ class BlogController extends Controller
         $comment->user_id = Auth::id();
         $comment->blog_id = $request->id;
         $comment->save();
-        return redirect()->back();
+        return redirect()->back()->with('message', 'Comment saved');
         
     }
 

@@ -6,9 +6,7 @@
 				<td> SN </td>
 				<td> Title </td>
 				<td> Description </td>
-				@if(Auth::user()->user_type == 'admin')
-					<td colspan="2">Manage</td>
-				@endif
+				<td colspan="2">Manage</td>	
 			</tr>
 			<?php $count = 0; ?>
 			@foreach($categories as $item)
@@ -19,10 +17,9 @@
 						<a href="/category/blogs/<?php echo($item->id);?>"> {{$item->title}} </a> 
 					</td>
 					<td> {{$item->description}} </td>
-					@if(Auth::user()->user_type == 'admin')
 						<td><a href="/blog-categories/<?php echo($item->id);?>" class="btn btn-primary">Edit</a></td>
 						<td><button class="btn btn-danger" onClick ="askDeleteQuestion(<?php echo($item->id);?>)">Delete</button></td>
-					@endif
+
 				</tr>
 			@endforeach
 		</table>

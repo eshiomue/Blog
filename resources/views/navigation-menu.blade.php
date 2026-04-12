@@ -17,7 +17,7 @@
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
-                        {{ __('Students') }}
+                        {{ __('About Us') }}
                     </x-jet-nav-link>
                 </div>
             </div>
