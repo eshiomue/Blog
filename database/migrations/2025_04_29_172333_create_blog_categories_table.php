@@ -17,7 +17,9 @@ class CreateBlogCategoriesTable extends Migration
             $table->id();
             $table->string('title', 100);
             $table->string('description', 200);
+            $table->string('avatar')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

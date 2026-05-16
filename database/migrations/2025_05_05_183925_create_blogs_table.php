@@ -20,6 +20,7 @@ class CreateBlogsTable extends Migration
             $table->integer('posted_by');
             $table->integer('category_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

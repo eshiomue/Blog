@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
@@ -17,7 +17,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::user()->user_type != 'admin'){
+        if(strtolower(Auth::user()->user_type) != 'admin'){
             return redirect()->to('/dashboard')->with('message', 'You are not permitted to view the requsted resource');
 
         }

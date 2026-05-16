@@ -9,20 +9,20 @@ class RedirectController extends Controller
     // Show the Add Category page
     public function create()
     {
-        return view('add-category'); 
+        return view('category/add');
     }
 
      public function getCategories()
     {
-        return view('blog-categories'); 
+        return view('categories');
     }
 
      public function getNewPostForm()
     {
-        return view('post/add-post'); 
+        return view('post/add-post');
     }
      public function ListPost()
     {
-        return view('post/list-post'); 
+        return view('post/list-post');
     }
 }

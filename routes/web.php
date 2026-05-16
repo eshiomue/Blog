@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\BlogCategoryController;
@@ -28,12 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/comments', [BlogController::class, 'commentPost']);
 });
 
-Route::get('/add-category', [BlogCategoryController::class, 'create']);
-Route::post('/add-category', [BlogCategoryController::class, 'save']);
-Route::get('/blog-categories', [BlogCategoryController::class, 'getCategories']);
-Route::get('/blog-categories/{id}', [BlogCategoryController::class, 'getEditCategoryForm']);
-Route::post('/update-category', [BlogCategoryController::class, 'updataBlogCategory']);
-Route::get('/delete-category/{id}', [BlogCategoryController::class, 'deleteCategory']);
+
+Route::get('/categories', [BlogCategoryController::class, 'getCategories']);
 
 
 Route::get('/post/list-post', [BlogController::class, 'ListPost']);
@@ -41,20 +38,31 @@ Route::get('/edit-post/{id}', [BlogController::class, 'editPost']);
 Route::post('/update-post', [BlogController::class, 'updatePost']);
 Route::get('/delete-post/{id}', [BlogController::class, 'deletePost']);
 Route::get('/post/view/{id}', [BlogController::class, 'viewPost']);
-
-
-Route::get('/category/blogs/{id}', [BlogController::class, 'listBlogsInOneCategory']);
+Route::get('/category/{id}/blogs', [BlogController::class, 'listBlogsInOneCategory']);
 
 Route::get('/post/search', [BlogController::class, 'searchPost']);
 Route::post('/post/search', [BlogController::class, 'getSearchPostResult']);
+
+
+Route::prefix('admin')
+ ->middleware(['auth', 'admin'])
+ ->group(function(){
+    Route::get('/category/add', [AdminController::class, 'create']);
+    Route::post('/category/add', [AdminController::class, 'save']);
+    Route::post('/category/update', [AdminController::class, 'updataBlogCategory']);
+    Route::get('/category/delete/{id}', [AdminController::class, 'deleteCategory']);
+    Route::get('/categories/{id}', [BlogCategoryController::class, 'getEditCategoryForm']);
+    Route::get('/user/list', [AdminController::class, 'listUsers']);
+
+ });
 
 
 
 //redirected user if not login //
 
 // Route::middleware('auth')->group(function () {
-//     Route::get('/add-category', [RedirectController::class, 'create']);
-//     Route::get('/blog-categories', [RedirectController::class, 'getCategories']);
+//     Route::get('/category/add', [RedirectController::class, 'create']);
+//     Route::get('/categories', [RedirectController::class, 'getCategories']);
 //     Route::get('/post/list-post', [RedirectController::class, 'ListPost']);
 //     Route::get('/post/add-post', [RedirectController::class, 'getNewPostForm']);
 //     // Add more admin pages here
@@ -65,13 +73,13 @@ Route::post('/post/search', [BlogController::class, 'getSearchPostResult']);
 
 
 
- 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified'
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });

@@ -5,20 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BlogCategory;
 use App\Models\Blog;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Comment;
+use App\Models\User;
+use Exception;
 
 class BlogController extends Controller
 {
-    
+
     public function getNewPostForm(){
         $blogCategories = BlogCategory::all();
+         $user = User::where('id', Auth::id())->first();
+        if ((!is_null($user)) && ($user->isAdmin())) {
+            return view('admin.blog.new-post', compact('blogCategories'));
+        }
         return view('blog.new-post', compact('blogCategories'));
     }
 
 
     public function savePost(Request $request){
-        
+
         if(isset($request->id)){
             //update
             $blog = Blog::find($request->id);
@@ -44,17 +50,30 @@ class BlogController extends Controller
             move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file);
             return redirect()->back()->with('message', 'Blog Created');
         }
-        
+
 
     }
     public function ListPost(){
-        $blogs = Blog::with('category', 'comment')->get();
-        return view('blog.list-post', compact('blogs'));
+        try {
+            $blogs = Blog::with('category', 'comments')->paginate(2);
+            $user = User::where('id', Auth::id())->first();
+            if ((!is_null($user)) && ($user->isAdmin())) {
+                return view('admin.blog.list-post', compact('blogs'));
+            }
+            return view('blog.list-post', compact('blogs'));
+        } catch(Exception $ex) {
+            logger($ex);
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
 
     }
     public function editPost($id){
         $blog = Blog::find($id);
         $blogCategories = BlogCategory::all();
+        $user = User::where('id', Auth::id())->first();
+        if ((!is_null($user)) && ($user->isAdmin())) {
+            return view('admin.blog.edit-post', compact('blog', 'blogCategories'));
+        }
         return view('blog.edit-post', compact('blog', 'blogCategories'));
     }
 
@@ -75,9 +94,9 @@ class BlogController extends Controller
         return redirect()->to('/post/list-post');
 
     }
- 
+
     public function viewPost($id){
-        $post = Blog::with('comment', 'user', 'comment.user')->where('id',$id)->first();
+        $post = Blog::with('comments', 'user', 'comments.user')->where('id',$id)->first();
         if(is_null($post)){
             $notification = array(
                 'message' => 'Was not found ',
@@ -85,12 +104,27 @@ class BlogController extends Controller
             );
             return redirect()->to('/post/list-post')->with($notification);
         }
-        return view('blog.view-post', compact('post'));
+        $relatedPosts = Blog::with('user', 'category')
+            ->whereHas('category', function($q) use($id) {
+                $q->where('id', $id);
+            })->orderBy('id','DESC')->get()->take(10);
+        
+        $categories = BlogCategory::all();
+        $user = User::where('id', Auth::id())->first();
+        if ((!is_null($user)) && ($user->isAdmin())) {
+            return view('admin.blog.view-post', compact('post', 'relatedPosts', 'categories'));
+        }
+        return view('blog.view-post', compact('post', 'relatedPosts', 'categories'));
     }
 
     public function listBlogsInOneCategory($id){
         $data = BlogCategory::with('blogs', 'blogs.user')->where('id',$id)->first();
-        return view('blog.view-category-blogs', compact('data'));
+        $categories =  BlogCategory::paginate(20);
+        $user = User::where('id', Auth::id())->first();
+        if ((!is_null($user)) && ($user->isAdmin())) {
+            return view('admin.blog.view-category-blogs', compact('data', 'categories'));
+        }
+        return view('blog.view-category-blogs', compact('data', 'categories'));
     }
 
     public function listAllCategoryAndTheirBlogs(){
@@ -105,7 +139,7 @@ class BlogController extends Controller
         $comment->blog_id = $request->id;
         $comment->save();
         return redirect()->back()->with('message', 'Comment saved');
-        
+
     }
 
     public function searchPost(){

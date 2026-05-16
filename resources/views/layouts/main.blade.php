@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Makaan Blog</title>
+    <title>Prosper Blog</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -29,10 +29,14 @@
     <!-- Template Stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+    <!-- responsive table -->
+    <link rel="stylesheet" href="{{asset('css/responsive-table.css')}}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
 </head>
 
 <body>
-    <div class="container-xxl bg-white p-0">
+    <!-- <div class="container-xxl bg-white p-0"> -->
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -49,7 +53,7 @@
                     <div class="icon p-2 me-2">
                         <img class="img-fluid" src="img/icon-deal.png" alt="Icon" style="width: 30px; height: 30px;">
                     </div>
-                    <h1 class="m-0 text-primary">Makaan Blog</h1>
+                    <h1 class="m-0 text-primary">Prosper Blog</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
@@ -59,24 +63,24 @@
                         <a href="{{ route('welcome') }}" class="nav-item nav-link active">Home</a>
                         <a href="{{ url('/about') }}" class="nav-item nav-link">About</a>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Blog Category</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="{{ url('/add-category') }}" class="dropdown-item">Create Category</a>
-                                
-                                <a href="/blog-categories" class="dropdown-item">Blog categories</a>
+                                @foreach($blog_categories as $blog_category)
+                                    <a href="{{ url('/category/' . $blog_category->id . '/blogs') }}" class="dropdown-item">{{ $blog_category->title }}</a>
+                                @endforeach
+                                <a href="{{ url('/categories') }}" class="dropdown-item">All</a>
                             </div>
                         </div>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Blog</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="{{ url('/post/add-post') }}" class="dropdown-item">Create Blog</a>
-                                <a href="{{ url('/post/list-post') }}" class="dropdown-item">List</a>
-                                 <a href="{{ url('/post/search')}} " class="dropdown-item">search</a>
+                                <a href="{{ url('/post/add-post') }}" class="dropdown-item">Create</a>
+                                <a href="{{ url('/post/list-post') }}" class="dropdown-item">View</a>
                             </div>
                         </div>
                         <a href="{{ url('/contact') }}" class="nav-item nav-link">Contact</a>
                     </div>
-                    
+
                     @guest
                         <a href="{{ url('/login') }}" class="nav-item nav-link">Login</a>
                         <a href="{{ url('/register') }}" class="nav-item nav-link">Register</a>
@@ -84,12 +88,15 @@
                     @else
 
                         <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            {{ explode(' ', $active_profile->name)[0] }}
+                        </a>
                         <div class="dropdown-menu rounded-0 m-0">
                             <a href="{{ route('profile.show') }}" class="dropdown-item">Edit profile</a>
+                            <a href="{{ url('/dashboard') }}" class="dropdown-item">Dashboard</a>
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
-                                <button type="submit">Logout</button>
+                                <button type="submit" class="btn btn-light">Logout</button>
                             </form>
                         </div>
                     </div>
@@ -103,7 +110,7 @@
 
 
         {{$slot}}
-        
+
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -166,8 +173,8 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved. 
-                            
+                            &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
+
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
                             Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
                         </div>
@@ -187,7 +194,7 @@
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+    <!-- </div> -->
  <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -199,6 +206,7 @@
     <!-- Template Javascript -->
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
     <script>
         @if (Session::has('message'))
             var type = "{{ Session::get('alert-type', 'info') }}"
@@ -236,6 +244,11 @@
                     break;
             }
         @endif
+
+        $(document).ready(function() {
+            console.log('summernote loaded');
+            $('#summernote').summernote();
+        });
     </script>
 </body>
 

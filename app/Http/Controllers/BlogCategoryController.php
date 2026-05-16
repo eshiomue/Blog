@@ -4,28 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BlogCategory;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class BlogCategoryController extends Controller
 {
-    public function create(){
-        return view('new-category');
-    }
-
-    public function save(Request $request){
-        $new_blog = new BlogCategory();
-        $new_blog->title = $request->title;
-        $new_blog->description = $request->description;
-        $new_blog->save();
-        $notification = array(
-            'message' => 'Successfully Created',
-            'alert-type' => 'success'
-        );
-        return redirect()->back()->with($notification);
-    }
 
     public function getCategories(){
-        $categories = BlogCategory::orderBy('title','DESC')->get();
-        return view('blog-categories', compact('categories'));
+        $categories = BlogCategory::withCount('blogs')
+            ->orderBy('title', 'DESC')
+            ->paginate(20);
+            $user = User::where('id', Auth::id())->first();
+            if ((!is_null($user)) && ($user->isAdmin())) {
+                return view('admin.blog.categories', compact('categories'));
+            }
+        return view('categories', compact('categories'));
     }
 
     public function getEditCategoryForm($id){
@@ -38,12 +31,12 @@ class BlogCategoryController extends Controller
         $blogCategory->title = $req->title;
         $blogCategory->description = $req->description;
         $blogCategory->save();
-        return redirect()->to('/blog-categories');
+        return redirect()->to('/categories');
     }
 
     public function deleteCategory($id){
         $blogCategory = BlogCategory::find($id);
         $blogCategory->delete();
-        return redirect()->to('/blog-categories');
+        return redirect()->to('/categories');
     }
 }
