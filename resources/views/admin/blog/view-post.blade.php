@@ -34,10 +34,10 @@
                     <div class="row g-0 gx-5 align-items-end">
                         <div class="col-lg-12">
                             <div class="text-start mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
-                                <h5 class="mb-3">Recent post</h5>
-                                @if((!is_null($recent)) && (count($recent)))
-                                    @foreach($recent as $post)
-                                        <div class="col-md-12" style="border-radius: 15px; margin-bottom: 10px;">
+                                @if((!is_null($relatedPosts)) && (count($relatedPosts)))
+                                    <h5 class="mb-3">Related post</h5>
+                                    @foreach($relatedPosts as $post)
+                                        <div class="col-md-12 related-post">
                                             <a href="{{ url('/post/view', ['id'=>$post->id] ) }}"> {{$post->title}} </a>
                                         </div>
 

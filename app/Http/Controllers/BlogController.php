@@ -54,7 +54,7 @@ class BlogController extends Controller
     }
     public function ListPost(){
         try {
-            $blogs = Blog::with('category', 'comments')->paginate(2);
+            $blogs = Blog::with('category', 'comments')->paginate(5);
             $user = User::where('id', Auth::id())->first();
             if ((!is_null($user)) && ($user->isAdmin())) {
                 return view('admin.blog.list-post', compact('blogs'));
@@ -104,9 +104,10 @@ class BlogController extends Controller
             return redirect()->to('/post/list-post')->with($notification);
         }
         $relatedPosts = Blog::with('user', 'category')
-            ->whereHas('category', function($q) use($id) {
-                $q->where('id', $id);
-            })->orderBy('id','DESC')->get()->take(10);
+            ->whereHas('category', function($q) use($post) {
+                $q->where('id', $post->category_id);
+            })
+            ->where('id', '<>', $id)->orderBy('id','DESC')->get()->take(10);
 
         $categories = BlogCategory::all();
         $user = User::where('id', Auth::id())->first();

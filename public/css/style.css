@@ -114,30 +114,6 @@
     color: var(--primary);
 }
 
-/* custom css */
-.blog-category {
-    border-radius: 15px;
-    background-color: #ffffff;
-    padding: 10px;
-    border:thin solid #ededed;
-    margin: 5px;
-}
-
-.blog-category a {
-    text-decoration: none;
-}
-
-.my-post{
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border: thin solid #cddfdb;
-    padding: 5px;
-}
-
-.my-post-footer{
-    font-size: 0.8rem;
-    text-align: right;
-}
 
 @media (max-width: 991.98px) {
     .nav-bar {

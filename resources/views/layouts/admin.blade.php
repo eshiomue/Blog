@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{asset('css/responsive-table.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+
+     <link rel="stylesheet" href="{{asset('css/blog.css')}}"/>
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">

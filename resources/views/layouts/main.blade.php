@@ -32,6 +32,7 @@
     <!-- responsive table -->
     <link rel="stylesheet" href="{{asset('css/responsive-table.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link rel="stylesheet" href="{{asset('css/blog.css')}}"/>
 </head>
 
 <body>

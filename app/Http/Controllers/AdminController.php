@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     public function getCategories(){
-        $categories = BlogCategory::orderBy('title','DESC')->paginate(20);
+        $categories = BlogCategory::orderBy('title','DESC')->paginate(12);
         return view('admin.categories', compact('categories'));
     }
 

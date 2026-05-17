@@ -47,7 +47,7 @@
                             @if((!is_null($relatedPosts)) && (count($relatedPosts)))
                                 <h5 class="mb-3">Related post</h5>
                                 @foreach($relatedPosts as $post)
-                                    <div class="col-md-12" style="border-radius: 15px; margin-bottom: 10px;">
+                                    <div class="col-md-12 related-post">
                                         <a href="{{ url('/post/view', ['id'=>$post->id] ) }}"> {{$post->title}} </a>
                                     </div>
 
