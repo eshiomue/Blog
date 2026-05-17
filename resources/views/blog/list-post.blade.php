@@ -63,7 +63,6 @@
 
 
 	<script type="text/javascript">
-
 		function askDeleteQuestion(id){
 			console.log(id);
 			var answer = confirm('Are you sure you want to delete?');

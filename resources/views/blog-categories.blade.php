@@ -6,7 +6,7 @@
 				<td> SN </td>
 				<td> Title </td>
 				<td> Description </td>
-				<td colspan="2">Manage</td>	
+				<td colspan="2">Manage</td>
 			</tr>
 			<?php $count = 0; ?>
 			@foreach($categories as $item)
@@ -14,7 +14,7 @@
 				<tr>
 					<td>{{$count}}</td>
 					<td>
-						<a href="/category/blogs/<?php echo($item->id);?>"> {{$item->title}} </a> 
+						<a href="/category/blogs/<?php echo($item->id);?>"> {{$item->title}} </a>
 					</td>
 					<td> {{$item->description}} </td>
 						<td><a href="/blog-categories/<?php echo($item->id);?>" class="btn btn-primary">Edit</a></td>
@@ -26,7 +26,7 @@
 	</div>
 
 	<script type="text/javascript">
-		
+
 		function askDeleteQuestion(id){
 			console.log(id);
 			var answer = confirm('Are you sure you want to delete?');

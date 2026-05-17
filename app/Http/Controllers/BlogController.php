@@ -24,7 +24,6 @@ class BlogController extends Controller
 
 
     public function savePost(Request $request){
-
         if(isset($request->id)){
             //update
             $blog = Blog::find($request->id);
@@ -108,7 +107,7 @@ class BlogController extends Controller
             ->whereHas('category', function($q) use($id) {
                 $q->where('id', $id);
             })->orderBy('id','DESC')->get()->take(10);
-        
+
         $categories = BlogCategory::all();
         $user = User::where('id', Auth::id())->first();
         if ((!is_null($user)) && ($user->isAdmin())) {
