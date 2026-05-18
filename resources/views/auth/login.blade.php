@@ -1,12 +1,5 @@
 <x-guest-layout>
 
-    <div class="container mt-5">
-        @if (session('error'))
-            <div class="alert alert-danger text-center py-4 px-3" role="alert" style="font-size: 1.5rem; font-weight: 700; border-radius: 0.75rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                {{ session('error') }}
-            </div>
-        @endif
-    </div>
 
     <x-jet-authentication-card>
         <x-slot name="logo">
