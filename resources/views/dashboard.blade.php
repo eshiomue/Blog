@@ -20,12 +20,25 @@
                 @if((!is_null($myPosts)) && (count($myPosts) > 0))
                     @foreach($myPosts as $post)
                         <div class="row my-post">
-                            <div class="col-md-12">
-                                <a href="{{ url('/post/view', ['id'=> $post->id]) }}"> {{$post->title}}</a>
+                            <div class="col-md-3">
+                                <img src="{{url($post->picture)}}" style="width: 100%; height: auto; border-radius: 5px;">
                             </div>
-                            <div class="col-md-12 my-post-footer">
-                                Date: {{ $post->created_at->diffForHumans() }}
-                                | {{ $post->comments != null ? count($post->comments) : 0  }} comments
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a href="{{ url('/post/view', ['id'=> $post->id]) }}"> {{$post->title}}</a>
+                                    </div>
+                                    <div class="col-md-12 my-post-footer">
+                                        Date: {{ $post->created_at->diffForHumans() }}
+                                        | {{ $post->comments != null ? count($post->comments) : 0  }} comments
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-3">
+                                    <a href="{{ url('/post/view/'. $post->id) }}"><button class="btn btn-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+                                    <a href="{{ url('/post/edit/'. $post->id) }}"><button class="btn btn-warning btn-sm"><i class="fa fa-edit" aria-hidden="true"></i></button></a>
+                                    <a href="{{ url('/post/delete/'. $post->id) }}"><button class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button></a>
+                                </div>
+
                             </div>
                         </div>
                     @endforeach
@@ -48,7 +61,7 @@
                                 @foreach($myComments as $comment)
                                     <div class="my-post">
                                         <h6>{{ $comment->post->title }}</h6>
-                                        <?php echo($comment->comment); ?>
+                                         {!! $comment->comment !!}
 
                                     </div>
                                 @endforeach
@@ -93,7 +106,7 @@
                                                 $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                             }
                                         @endphp
-                                        <p><?php echo(\Illuminate\Support\Str::limit($excerpt, 80, '...'));?></p>
+                                        <p> {!! \Illuminate\Support\Str::limit($excerpt, 80, '...')!!}</p>
                                     </div>
                                     <div class="d-flex border-top">
                                         <small class="flex-fill text-center border-end py-2"><i class="fa-duotone fa-thin fa-user"></i>{{ $blog->user != null ? 'By '. explode(' ', $blog->user->name)[0] : '' }}</small>

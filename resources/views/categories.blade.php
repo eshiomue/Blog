@@ -2,11 +2,8 @@
 
 	<div class="container" style="margin-top: 15px;">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h4>Blog Categories</h4>
-            </div>
-            <div class="col-md-6" style="text-align: right;">
-                <a href="{{ url('admin/category/add') }}" class="btn btn-success btn-sm">Create Category</a>
             </div>
         </div>
         @if((is_null($categories)) || (count($categories) == 0))
@@ -18,7 +15,7 @@
             <div class="row">
                 @foreach($categories as $item)
                     <div class="col-md-3 blog-category">
-                        <a href="/category/<?php echo($item->id);?>/blogs">
+                        <a href="/category/{!!  $item->id !!}/blogs">
                             {{$item->title}} - {{$item->blogs_count }} {{ $item->blogs_count > 1 ? 'posts' : 'post' }}
                         </a>
                         <p>{{ $item->description }}</p>

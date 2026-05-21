@@ -43,7 +43,11 @@
                         </div>
 
                         <div class="row" style="margin-top :20px">
-                        <input type="file" name="picture">
+                        <input type="file" name="picture" id="imageInput">
+                        <!-- Imaage preview -->
+                        <div class="col-12 col-lg-4">
+                            <img id="preview" class="mt-3" style="max-width: 200px; display: block;">
+                        </div>
                         </div>
                         <div class="row" style="margin-top :50px">
                             <button class="btn btn-primary w-100 py-3" type="submit">Save post</button>

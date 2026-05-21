@@ -41,7 +41,7 @@
                                                 $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                             }
                                         @endphp
-                                        <p><?php echo(\Illuminate\Support\Str::limit($excerpt, 80, '...')); ?> </p>
+                                        <p> {!!  \Illuminate\Support\Str::limit($excerpt, 80, '...') !!} </p>
                                     </td>
                                     <td data-label="Posted By">
                                         {{ $item->user != null ? $item->user->name : "-" }}
@@ -50,15 +50,15 @@
                                         {{ $item->category != null ? $item->category->title : ""  }}
                                     </td>
                                     <td data-label="Avatar">
-                                        <img src="<?php echo('/' . $item->picture); ?>" width="50" height="50">
+                                        <img src=" {!! '/' . $item->picture !!}" width="50" height="50">
                                     </td>
                                     <td data-label="Comments">
                                         {{ $item->comments != null ? count($item->comments) : 0 }}
                                     </td>
                                     <td data-label="">
-                                        <a href="/post/view/<?php echo($item->id);?>" class="btn btn-primary btn-sm">View</a>
-                                        <a href="/post/edit/<?php echo($item->id);?>" class="btn btn-warning btn-sm">Edit</a>
-                                        <a class="btn btn-danger btn-sm" onClick ="askDeleteQuestion(<?php echo($item->id);?>)">Delete</a>
+                                        <a href="/post/view/{!! $item->id !!}" class="btn btn-primary btn-sm">View</a>
+                                        <a href="/post/edit/{!! $item->id !!}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a class="btn btn-danger btn-sm" onClick ="askDeleteQuestion( {!! $item->id!!})">Delete</a>
                                     </td>
 
                                 </tr>

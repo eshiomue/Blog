@@ -9,7 +9,9 @@
                         </div>
                     @endif
                     <h1>{{$post->title}}</h1>
-                    <p style="text-align: justify;"><?php echo($post->content); ?></p>
+                    <div class="article-content">
+                        {!! $post->content !!}
+                    </div>
 
                     <span style="font-weight:bold; font-style: italic;"> Created by:
                         {{ $post->user != null ? $post->user->name : ''}}
@@ -24,7 +26,7 @@
                         <div class="row" style="border:1px; margin-top: 20px; border-top: thin solid #999999; padding: 15px; border-radius: 15px;">
                             <h6>Re:{{$post->title}}</h6>
                             <p>
-                                <b>{{$reply->user->name}}</b>:- <?php echo($reply->comment); ?>
+                                <b>{{$reply->user->name}}</b>:-  {!! $reply->comment !!}
                             </p>
                         </div>
                     @endforeach
@@ -38,7 +40,9 @@
                                     <h5 class="mb-3">Related post</h5>
                                     @foreach($relatedPosts as $post)
                                         <div class="col-md-12 related-post">
-                                            <a href="{{ url('/post/view', ['id'=>$post->id] ) }}"> {{$post->title}} </a>
+                                            <a href="{{ url('/post/view', ['id'=>$post->id] ) }}">
+                                                {{$post->title}}
+                                            </a>
                                         </div>
 
                                     @endforeach
@@ -53,11 +57,11 @@
                                 <h5 class="mb-3">Blog categories</h5>
                                 @if((!is_null($categories)) && (count($categories)))
                                     <div class="col-md-12" style="border-radius: 15px; margin-bottom: 10px;">
-                                        <?php $count = 0; ?>
+                                        <?php $count = 0 ?>
                                         @foreach($categories as $category)
                                         {{ $count > 0 ? ', '  : '' }}
                                         <a href="{{ url('/category/' . $category->id . '/blogs') }}">
-                                                <strong>{{ $category->title }}</strong>
+                                            <strong>{{ $category->title }}</strong>
                                         </a>
                                             <?php $count++;?>
                                         @endforeach

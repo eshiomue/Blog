@@ -482,6 +482,31 @@
             $('#summernote').summernote();
         });
     </script>
+
+    <script>
+        $(document).ready(function(e){
+            var url = $('#imgUrl').val();
+            if ((url != null) && (url != undefined)) {
+                var imageUrl = '/' + url;
+                $('#preview').attr('src', imageUrl);
+            }
+
+
+            $('#imageInput').on('change', function(e){
+                const preview = document.getElementById('preview');
+                const file = e.target.files[0];
+
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                }
+            });
+
+            $('form').on('submit', function(){
+                $('#submitbtn').prop('disabled', true).text('Processing...');
+            });
+        })
+    </script>
 </body>
 
 </html>

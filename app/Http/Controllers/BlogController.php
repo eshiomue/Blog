@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Comment;
 use App\Models\User;
 use Exception;
+use Mews\Purifier\Facades\Purifier;
 
 class BlogController extends Controller
 {
@@ -28,7 +29,7 @@ class BlogController extends Controller
             //update
             $blog = Blog::find($request->id);
             $blog->title = $request->title;
-            $blog->content = $request->content;
+            $blog->content = Purifier::clean($request->content);
             $blog->posted_by = Auth::id();
             $blog->category_id = $request->category_id;
             $blog->save();
@@ -41,7 +42,7 @@ class BlogController extends Controller
 
             $blog = new Blog();
             $blog->title = $request->title;
-            $blog->content = $request->content;
+            $blog->content = Purifier::clean($request->content);
             $blog->posted_by = Auth::id();
             $blog->category_id = $request->category_id;
             $blog->picture = $target_file;
@@ -52,14 +53,30 @@ class BlogController extends Controller
 
 
     }
-    public function ListPost(){
+    public function listPost(){
+        $myPost = null;
+        $blogs = null;
         try {
-            $blogs = Blog::with('category', 'comments')->paginate(5);
             $user = User::where('id', Auth::id())->first();
             if ((!is_null($user)) && ($user->isAdmin())) {
+                $blogs = Blog::with('category', 'comments')
+                    ->orderBy('created_at', 'DESC')->paginate(6);
                 return view('admin.blog.list-post', compact('blogs'));
             }
-            return view('blog.list-post', compact('blogs'));
+            if(Auth::check()){
+                $myPost = Blog::with('category', 'comments')
+                    ->where('posted_by', Auth::id())
+                    ->orderBy('created_at', 'DESC')->paginate(6);
+                $blogs = Blog::with('category', 'comments')
+                    ->where('posted_by', '<>', Auth::id())
+                    ->orderBy('created_at', 'DESC')->paginate(6);
+            } else {
+                $blogs = Blog::with('category', 'comments')
+                    ->orderBy('created_at', 'DESC')->paginate(6);
+            }
+
+            $categories = BlogCategory::paginate(20);
+            return view('blog.list-post', compact('blogs', 'categories', 'myPost'));
         } catch(Exception $ex) {
             logger($ex);
             return redirect()->back()->with('error', $ex->getMessage());
@@ -77,13 +94,37 @@ class BlogController extends Controller
     }
 
     public function updatePost(Request $req){
-        $blog = Blog::find($req['recId']);
-        $blog->title = $req->title;
-        $blog->content = $req->content;
-        $blog->posted_by = $req->posted_by;
-        $blog->category_id = $req->category_id;
-        $blog->save();
-        return redirect()->to('/update-post');
+        logger('updatePost');
+        try{
+            if(is_null($req->blogId)) {
+                return redirect()->back()->with('error', 'No post selected');
+            }
+            $blog = Blog::find($req->blogId);
+            if(is_null($blog)) {
+                return redirect()->back()->with('error', 'Post not found');
+            }
+            $imagePath = '';
+            $oldAvatar = $blog->picture;
+            if ($req->file('picture')) {
+                logger('Replacing picture');
+                $target_dir = "uploads/";
+                $imagePath = $target_dir . basename($_FILES["picture"]["name"]);
+                move_uploaded_file($_FILES["picture"]["tmp_name"], $imagePath);
+                logger('Unlink old picture ' . $oldAvatar);
+                unlink($oldAvatar);
+            }
+
+            $blog->title = $req->title;
+            $blog->content = Purifier::clean($req->content);
+            $blog->category_id = $req->category_id;
+            $blog->picture = $imagePath != '' ? $imagePath : $oldAvatar;
+            $blog->save();
+            return redirect()->back()->with('success', 'Post updated successfully');
+        }catch(Exception $ex) {
+            logger('Error=>' . $ex);
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
+
 
     }
 

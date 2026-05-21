@@ -33,15 +33,25 @@ Route::middleware('auth')->group(function () {
 Route::get('/categories', [BlogCategoryController::class, 'getCategories']);
 
 
-Route::get('/post/list-post', [BlogController::class, 'ListPost']);
-Route::get('/edit-post/{id}', [BlogController::class, 'editPost']);
-Route::post('/update-post', [BlogController::class, 'updatePost']);
-Route::get('/delete-post/{id}', [BlogController::class, 'deletePost']);
-Route::get('/post/view/{id}', [BlogController::class, 'viewPost']);
-Route::get('/category/{id}/blogs', [BlogController::class, 'listBlogsInOneCategory']);
+Route::prefix('post')
+ ->group(function(){
+    Route::get('/list-post', [BlogController::class, 'listPost']);
+    Route::get('/edit/{id}', [BlogController::class, 'editPost']);
+    Route::post('/update', [BlogController::class, 'updatePost']);
+    Route::get('/delete/{id}', [BlogController::class, 'deletePost']);
+    Route::get('/view/{id}', [BlogController::class, 'viewPost']);
+    Route::get('/search', [BlogController::class, 'searchPost']);
+    Route::post('/search', [BlogController::class, 'getSearchPostResult']);
+ });
 
-Route::get('/post/search', [BlogController::class, 'searchPost']);
-Route::post('/post/search', [BlogController::class, 'getSearchPostResult']);
+// Route::get('/post/list-post', [BlogController::class, 'listPost']);
+// Route::get('/post/edit/{id}', [BlogController::class, 'editPost']);
+// Route::post('/post/update', [BlogController::class, 'updatePost']);
+// Route::get('/post/delete/{id}', [BlogController::class, 'deletePost']);
+// Route::get('/post/view/{id}', [BlogController::class, 'viewPost']);
+// Route::get('/post/search', [BlogController::class, 'searchPost']);
+// Route::post('/post/search', [BlogController::class, 'getSearchPostResult']);
+Route::get('/category/{id}/blogs', [BlogController::class, 'listBlogsInOneCategory']);
 
 
 Route::prefix('admin')

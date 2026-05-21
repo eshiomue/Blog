@@ -39,7 +39,7 @@
                                                 $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                             }
                                         @endphp
-                                        <p><?php echo(\Illuminate\Support\Str::limit($excerpt, 80, '...')); ?> </p>
+                                        <p> {!! \Illuminate\Support\Str::limit($excerpt, 80, '...') !!} </p>
                                     </td>
                                     <td data-label="Date Created">
                                         {{ $item->created_at }}
@@ -52,13 +52,13 @@
 
                                     <td data-label="">
                                         <!-- <span>
-                                            <a href="/post/view/<?php echo($item->id);?>" class="btn btn-primary btn-xs">View</a>
+                                            <a href="/post/view/ {!! $item->id!!}" class="btn btn-primary btn-xs">View</a>
                                         </span> -->
                                         <span>
-                                            <a href="/post/edit/<?php echo($item->id);?>" class="btn btn-warning btn-xs">Edit</a>
+                                            <a href="/post/edit/ {!! $item->id!!}" class="btn btn-warning btn-xs">Edit</a>
                                         </span>
                                         <span>
-                                            <a class="btn btn-danger btn-xs" onClick ="askDeleteQuestion(<?php echo($item->id);?>)">Delete</a>
+                                            <a class="btn btn-danger btn-xs" onClick ="askDeleteQuestion( {!! $item->id!!})">Delete</a>
                                         </span>
                                     </td>
                                 </tr>
