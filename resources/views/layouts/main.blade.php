@@ -104,6 +104,17 @@
                     @endguest
 
                 </div>
+
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group" style="margin-bottom: 5px;">
+                        <a href="{{url('/post/search')}}">
+                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        </a>
+                        <!-- <form action="{{url('/post/search')}}" id="searchForm">
+                            <input type="text" class="form-control search" placeholder="Type here...">
+                        </form> -->
+                    </div>
+                </div>
             </nav>
         </div>
         <!-- Navbar End -->
@@ -269,6 +280,11 @@
             $('form').on('submit', function(){
                 $('#submitbtn').prop('disabled', true).text('Processing...');
             });
+
+            // $('.search').on('keyup', function(e){
+            //     console.log(e.target.value);
+            //     console.log()
+            // })
         })
     </script>
 </body>

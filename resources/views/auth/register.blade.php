@@ -47,6 +47,11 @@
             @endif
 
             <div class="flex items-center justify-end mt-4">
+
+                <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ url('/') }}" style="margin-right:15px">
+                    {{ __('Home') }}
+                </a>
+
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                     {{ __('Already registered?') }}
                 </a>

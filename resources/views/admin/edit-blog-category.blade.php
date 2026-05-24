@@ -1,9 +1,9 @@
-<x-main-layout>
+<x-admin-layout>
 	<div class="container" style="margin-top: 50px;">
 		@if(Session::has('message'))
 			<span style="margin-bottom: 20px; color: green;">{{Session::get('message')}}</span>
 		@endif
-		<form method="POST" action="/category/update">
+		<form method="POST" action="/admin/category/update">
 			@csrf
 		    <div class="row g-3">
 		        <div class="col-md-6">
@@ -27,4 +27,4 @@
 	</div>
 
 
-</x-main-layout>
+</x-admin-layout>

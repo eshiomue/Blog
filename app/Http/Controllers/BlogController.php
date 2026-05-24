@@ -25,32 +25,36 @@ class BlogController extends Controller
 
 
     public function savePost(Request $request){
-        if(isset($request->id)){
-            //update
-            $blog = Blog::find($request->id);
-            $blog->title = $request->title;
-            $blog->content = Purifier::clean($request->content);
-            $blog->posted_by = Auth::id();
-            $blog->category_id = $request->category_id;
-            $blog->save();
-            return redirect()->back()->with('message', 'Blog Updated');
-        }else{
-            //create
-            $photo =    $_FILES['picture']['name'];
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["picture"]["name"]);
+        try{
+            if(isset($request->id)){
+                //update
+                $blog = Blog::find($request->id);
+                $blog->title = $request->title;
+                $blog->content = Purifier::clean($request->content);
+                $blog->posted_by = Auth::id();
+                $blog->category_id = $request->category_id;
+                $blog->save();
+                return redirect()->back()->with('message', 'Blog Updated');
+            }else{
+                //create
+                $photo =    $_FILES['picture']['name'];
+                $target_dir = "uploads/";
+                $target_file = $target_dir . basename($_FILES["picture"]["name"]);
 
-            $blog = new Blog();
-            $blog->title = $request->title;
-            $blog->content = Purifier::clean($request->content);
-            $blog->posted_by = Auth::id();
-            $blog->category_id = $request->category_id;
-            $blog->picture = $target_file;
-            $blog->save();
-            move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file);
-            return redirect()->back()->with('message', 'Blog Created');
+                $blog = new Blog();
+                $blog->title = $request->title;
+                $blog->content = Purifier::clean($request->content);
+                $blog->posted_by = Auth::id();
+                $blog->category_id = $request->category_id;
+                $blog->picture = $target_file;
+                $blog->save();
+                move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file);
+                return redirect()->back()->with('message', 'Blog Created');
+            }
+         } catch(Exception $ex) {
+            logger($ex);
+            return redirect()->back()->with('error', $ex->getMessage());
         }
-
 
     }
     public function listPost(){
@@ -129,13 +133,19 @@ class BlogController extends Controller
     }
 
     public function deletePost($id){
-        $blog = Blog::find($id);
-        $blog->delete();
-        return redirect()->to('/post/list-post');
+        try {
+            $blog = Blog::find($id);
+            $blog->delete();
+            return redirect()->to('/post/list-post');
+         } catch(Exception $ex) {
+            logger($ex);
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
 
     }
 
     public function viewPost($id){
+        $keyword = request('search');
         $post = Blog::with('comments', 'user', 'comments.user')->where('id',$id)->first();
         if(is_null($post)){
             $notification = array(
@@ -153,9 +163,9 @@ class BlogController extends Controller
         $categories = BlogCategory::all();
         $user = User::where('id', Auth::id())->first();
         if ((!is_null($user)) && ($user->isAdmin())) {
-            return view('admin.blog.view-post', compact('post', 'relatedPosts', 'categories'));
+            return view('admin.blog.view-post', compact('post', 'relatedPosts', 'categories', 'keyword'));
         }
-        return view('blog.view-post', compact('post', 'relatedPosts', 'categories'));
+        return view('blog.view-post', compact('post', 'relatedPosts', 'categories', 'keyword'));
     }
 
     public function listBlogsInOneCategory($id){
@@ -184,6 +194,12 @@ class BlogController extends Controller
     }
 
     public function searchPost(){
+        if (Auth::check()) {
+            $user = User::where('id', Auth::id())->first();
+            if ((!is_null($user)) && ($user->isAdmin())) {
+                return view('admin.blog.search_post');
+            }
+        }
         return view('blog.search_post');
 
     }
@@ -192,7 +208,71 @@ class BlogController extends Controller
     public function getSearchPostResult(Request $request){
         $search = $request->search;
         $blogs = Blog::where('title','LIKE','%'.$search.'%')->orWhere('content','LIKE','%'.$search.'%')->get();
-
+         if (Auth::check()) {
+            $user = User::where('id', Auth::id())->first();
+            if ((!is_null($user)) && ($user->isAdmin())) {
+                return view('admin.blog.search_post', compact('blogs','search'));
+            }
+        }
         return view('blog.search_post', compact('blogs','search'));
+    }
+
+    public function deletePostAjax ($id) {
+        logger('Delete post with id ' . $id);
+        $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'Request processing error');
+        if (!Auth::check()) {
+            logger('User is not logged in');
+            $res = array('isSuccess'=>false, 'code'=>403, 'Message'=>'You must login to perform this action');
+            return response()->json($res);
+        }
+
+        if ((is_null($id)) || ($id == '')) {
+            logger('Invalid post id ');
+            $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'Post id is required');
+            return response()->json($res);
+        }
+
+        $post = Blog::find($id);
+
+        if (is_null($post)) {
+            logger('Post not found ');
+            $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'not found');
+            return response()->json($res);
+        }
+
+        $post->delete();
+        logger('Post deleted successfully');
+        $res = array('isSuccess'=>true, 'code'=>200, 'Message'=>'Post deleted successfully');
+        return response()->json($res);
+
+    }
+
+    public function deleteCategoryAjax ($id) {
+        logger('Delete category with id ' . $id);
+        $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'Request processing error');
+        if (!Auth::check()) {
+            logger('User is not logged in');
+            $res = array('isSuccess'=>false, 'code'=>403, 'Message'=>'You must login to perform this action');
+            return response()->json($res);
+        }
+
+        if ((is_null($id)) || ($id == '')) {
+            logger('Invalid category id ');
+            $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'Category id is required');
+            return response()->json($res);
+        }
+
+        $category = BlogCategory::find($id);
+
+        if (is_null($category)) {
+            logger('Category not found ');
+            $res = array('isSuccess'=>false, 'code'=>500, 'Message'=>'not found');
+            return response()->json($res);
+        }
+
+        $category->delete();
+        logger('Category deleted successfully');
+        $res = array('isSuccess'=>true, 'code'=>200, 'Message'=>'Post deleted successfully');
+        return response()->json($res);
     }
 }

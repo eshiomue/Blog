@@ -8,10 +8,27 @@
                             <img src="{{asset($post->picture)}}" style="width:100%; height: auto;">
                         </div>
                     @endif
-                    <h1>{{$post->title}}</h1>
+                    <!-- <h1>{{$post->title}}</h1>
                     <div class="article-content">
                         {!! $post->content !!}
-                    </div>
+                    </div> -->
+                    @if(is_null($keyword))
+                        <h1 style="margin-top:15px">
+                            {{$post->title}}
+                            <span style="font-size:0.5rem">{{ $post->category != null ? $post->category->title : '' }}</span>
+                        </h1>
+                        <p style="text-align: justify;">
+                            {!!  $post->content !!}
+                        </p>
+                    @else
+                        <h1 style="margin-top:15px">
+                            {!! str_ireplace($keyword, "<mark>$keyword</mark>", $post->title) !!}
+                            <span style="font-size:0.5rem">{{ $post->category != null ? $post->category->title : '' }}</span>
+                        </h1>
+                        <p style="text-align: justify;">
+                            {!! str_ireplace($keyword, "<mark>$keyword</mark>", $post->content) !!}
+                        </p>
+                    @endif
 
                     <span style="font-weight:bold; font-style: italic;"> Created by:
                         {{ $post->user != null ? $post->user->name : ''}}

@@ -51,14 +51,16 @@
                                     </td>
 
                                     <td data-label="">
-                                        <!-- <span>
-                                            <a href="/post/view/ {!! $item->id!!}" class="btn btn-primary btn-xs">View</a>
-                                        </span> -->
                                         <span>
-                                            <a href="/post/edit/ {!! $item->id!!}" class="btn btn-warning btn-xs">Edit</a>
+                                            <a href="/admin/category/edit/{!! $item->id!!}" class="btn btn-warning btn-xs">Edit</a>
                                         </span>
                                         <span>
-                                            <a class="btn btn-danger btn-xs" onClick ="askDeleteQuestion( {!! $item->id!!})">Delete</a>
+                                            <button class="btn btn-danger btn-sm delete"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmModal"
+                                                data-id="{{$item->id}}">
+                                                Delete
+                                            </button>
                                         </span>
                                     </td>
                                 </tr>
@@ -75,17 +77,70 @@
 	</div>
 
 
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-	<script type="text/javascript">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm</h5>
 
-		function askDeleteQuestion(id){
-			console.log(id);
-			var answer = confirm('Are you sure you want to delete?');
-			console.log(answer);
-			if(answer==true){
-				window.location = '/post/delete/' + id;
-			}
-		}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    You are about to delete this category ?
+                    <input type="hidden" id="deleteCategoryWithId">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="btn btn-primary delete-category">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+		document.querySelectorAll('.delete').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const id = this.dataset.id;
+                console.log('delete category with id ' + id);
+                const btn = $('#delete-' + id);
+                $('#deleteCategoryWithId').val(id);
+                if (btn.prop('disabled')) return;
+                btn.prop('disabled', true);
+            });
+        });
+
+        document.querySelectorAll('.delete-category').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const btn = $(this);
+                if (btn.prop('disabled')) return;
+                btn.prop('disabled', true);
+                const id = $('#deleteCategoryWithId').val();
+                console.log('Delete category with id ' + id);
+                $.ajax({
+                    type: 'GET',
+                    url: '/admin/category/delete-ajax/'+id,
+                    success: function (data) {
+                        console.log(data);
+                        if(data.isSuccess) window.location.reload();
+                    }
+                });
+                $('#confirmModal').modal('hide');
+            })
+        });
+
 	</script>
 
 </x-admin-layout>

@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="{{asset('css/responsive-table.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
 
      <link rel="stylesheet" href="{{asset('css/blog.css')}}"/>
 </head>
@@ -93,6 +94,16 @@
             <span class="nav-link-text ms-1">Complaints</span>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link " href="{{ url('/admin/deleted/list') }}">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Trashed</span>
+          </a>
+        </li>
+
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
@@ -150,14 +161,13 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
-              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" placeholder="Type here...">
+                <form method="POST" action="{{ route('logout') }}" x-data>
+                    @csrf
+                    <button type="submit" class="btn btn-light" style="margin-top: 15px;">Logout</button>
+                </form>
             </div>
           </div>
-          <form method="POST" action="{{ route('logout') }}" x-data>
-                @csrf
-                <button type="submit" class="btn btn-light" style="margin-top: 15px;">Logout</button>
-            </form>
+
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
