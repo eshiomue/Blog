@@ -40,9 +40,9 @@
                                     </td>
 
                                     <td data-label="">
-                                        <a href="/user/view/<?php echo($user->id);?>" class="btn btn-primary btn-xs">View</a>
-                                        <a href="/user/edit/<?php echo($user->id);?>" class="btn btn-warning btn-xs">Edit</a>
-                                        <a class="btn btn-danger btn-xs" onClick ="askDeleteQuestion(<?php echo($user->id);?>)">Delete</a>
+                                        <a href="/user/view/ {!! $user->id!!}" class="btn btn-primary btn-xs">View</a>
+                                        <a href="/user/edit/ {!! $user->id!!}" class="btn btn-warning btn-xs">Edit</a>
+                                        <a class="btn btn-danger btn-xs" onClick ="askDeleteQuestion( {!! $user->id!!})">Delete</a>
                                     </td>
 
                                 </tr>

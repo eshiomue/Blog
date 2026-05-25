@@ -140,7 +140,7 @@
                                                     $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                                 }
                                             @endphp
-                                            <p><?php echo(\Illuminate\Support\Str::limit($excerpt, 80, '...')); ?> </p>
+                                            <p> {!! \Illuminate\Support\Str::limit($excerpt, 80, '...') !!} </p>
                                         </p>
                                     </div>
                                 </div>

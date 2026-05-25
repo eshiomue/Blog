@@ -8,17 +8,17 @@
 				<td> Description </td>
 				<td colspan="2">Manage</td>
 			</tr>
-			<?php $count = 0; ?>
+			<?php $count = 0!!}
 			@foreach($categories as $item)
-				<?php $count++; ?>
+				<?php $count++!!}
 				<tr>
 					<td>{{$count}}</td>
 					<td>
-						<a href="/category/blogs/<?php echo($item->id);?>"> {{$item->title}} </a>
+						<a href="/category/blogs/ {!! $item->id!!}"> {{$item->title}} </a>
 					</td>
 					<td> {{$item->description}} </td>
-						<td><a href="/blog-categories/<?php echo($item->id);?>" class="btn btn-primary">Edit</a></td>
-						<td><button class="btn btn-danger" onClick ="askDeleteQuestion(<?php echo($item->id);?>)">Delete</button></td>
+						<td><a href="/blog-categories/ {!! $item->id!!}" class="btn btn-primary">Edit</a></td>
+						<td><button class="btn btn-danger" onClick ="askDeleteQuestion( {!! $item->id!!})">Delete</button></td>
 
 				</tr>
 			@endforeach

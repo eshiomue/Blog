@@ -20,19 +20,19 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="title" name="title" placeholder="Your Name">
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Title" required>
                                 <label for="title">Title</label>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px;">
                             <div class="form-floating">
-                                <textarea class="form-control" placeholder="Enter Content" id="summernote" name="content" style="min-height: 250px"></textarea>
+                                <textarea class="form-control" placeholder="Enter Content" required id="summernote" name="content" style="min-height: 250px"></textarea>
                                 <label for="description">Content</label>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px;">
                             <div class="form-floating">
-                                <select class="form-control" id="category_id" name="category_id">
+                                <select class="form-control" id="category_id" name="category_id" required>
                                     <option value="">Choose One</option>
                                     @foreach($blogCategories as $item)
                                         <option value="{{ $item->id }}">{{ $item->title }}</option>
@@ -43,7 +43,11 @@
                         </div>
 
                         <div class="row" style="margin-top :20px">
-                        <input type="file" name="picture">
+                        <input type="file" name="picture" id="imageInput">
+                        <!-- Imaage preview -->
+                        <div class="col-12 col-lg-4">
+                            <img id="preview" class="mt-3" style="max-width: 200px; display: block;">
+                        </div>
                         </div>
                         <div class="row" style="margin-top :50px">
                             <button class="btn btn-primary w-100 py-3" type="submit">Save post</button>

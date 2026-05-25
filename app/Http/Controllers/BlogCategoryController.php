@@ -23,7 +23,7 @@ class BlogCategoryController extends Controller
 
     public function getEditCategoryForm($id){
         $blogCategory = BlogCategory::find($id);
-        return view('edit-blog-category', compact('blogCategory'));
+        return view('admin.edit-blog-category', compact('blogCategory'));
     }
 
     public function updataBlogCategory(Request $req){
@@ -31,7 +31,7 @@ class BlogCategoryController extends Controller
         $blogCategory->title = $req->title;
         $blogCategory->description = $req->description;
         $blogCategory->save();
-        return redirect()->to('/categories');
+        return redirect()->back()->with('success', 'Category updated successfully');
     }
 
     public function deleteCategory($id){

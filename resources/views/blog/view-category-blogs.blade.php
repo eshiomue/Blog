@@ -21,12 +21,12 @@
                                     $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                 }
                             @endphp
-                            <p>{{ \Illuminate\Support\Str::limit($excerpt, 80, '...') }}</p>
+                            <p> {!! \Illuminate\Support\Str::limit($excerpt, 80, '...') !!}</p>
                         </div>
                         <div class="d-flex border-top">
-                            <small class="flex-fill text-center border-end py-2"><i class="fa-duotone fa-thin fa-user"></i>{{ $blog->user != null ? 'By '. explode(' ', $blog->user->name)[0] : '' }}</small>
-                            <small class="flex-fill text-center border-end py-2"><i class="fa-graphite fa-thin fa-calendar"></i>{{ $blog->created_at->diffForHumans() }}</small>
-                            <small class="flex-fill text-center py-2"><i class="fa-thin fa-comment"></i>{{ $blog->comments != null ? count($blog->comments) : 0 }} Comments</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-circle" aria-hidden="true"></i> {{ $blog->user != null ? 'By '. explode(' ', $blog->user->name)[0] : '' }}</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar" aria-hidden="true"></i> {{ $blog->created_at->diffForHumans() }}</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-comments" aria-hidden="true"></i> {{ $blog->comments != null ? count($blog->comments) : 0 }} Comments</small>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 @foreach($categories as $item)
                     @if($item->id != $data->id)
                         <div class="col-md-3 blog-category">
-                            <a href="/category/<?php echo($item->id);?>/blogs">
+                            <a href="/category/{!! $item->id!!}/blogs">
                                 {{$item->title}} - {{$item->blogs_count }} {{ $item->blogs_count > 1 ? 'posts' : 'post' }}
                             </a>
                             <p>{{ $item->description }}</p>

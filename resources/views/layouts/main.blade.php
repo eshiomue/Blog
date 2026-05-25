@@ -72,7 +72,7 @@
                             </div>
                         </div>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Blog</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Post</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <a href="{{ url('/post/add-post') }}" class="dropdown-item">Create</a>
                                 <a href="{{ url('/post/list-post') }}" class="dropdown-item">View</a>
@@ -103,6 +103,17 @@
 
                     @endguest
 
+                </div>
+
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group" style="margin-bottom: 5px;">
+                        <a href="{{url('/post/search')}}">
+                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        </a>
+                        <!-- <form action="{{url('/post/search')}}" id="searchForm">
+                            <input type="text" class="form-control search" placeholder="Type here...">
+                        </form> -->
+                    </div>
                 </div>
             </nav>
         </div>
@@ -243,11 +254,38 @@
                     break;
             }
         @endif
+    </script>
 
-        $(document).ready(function() {
-            console.log('summernote loaded');
+    <script>
+        $(document).ready(function(e){
             $('#summernote').summernote();
-        });
+
+            var url = $('#imgUrl').val();
+            if ((url != null) && (url != undefined)) {
+                var imageUrl = '/' + url;
+                $('#preview').attr('src', imageUrl);
+            }
+
+
+            $('#imageInput').on('change', function(e){
+                const preview = document.getElementById('preview');
+                const file = e.target.files[0];
+
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                }
+            });
+
+            $('form').on('submit', function(){
+                $('#submitbtn').prop('disabled', true).text('Processing...');
+            });
+
+            // $('.search').on('keyup', function(e){
+            //     console.log(e.target.value);
+            //     console.log()
+            // })
+        })
     </script>
 </body>
 

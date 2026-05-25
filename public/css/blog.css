@@ -29,3 +29,22 @@
 .related-post:hover{
     color: #FF6922;
 }
+
+.article-content {
+    overflow-x: auto;
+    word-wrap: break-word;
+}
+
+.article-content table {
+    width: 100% !important;
+    border-collapse: collapse;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.article-content * {
+    max-width: 100%;
+}

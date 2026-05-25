@@ -20,12 +20,31 @@
                 @if((!is_null($myPosts)) && (count($myPosts) > 0))
                     @foreach($myPosts as $post)
                         <div class="row my-post">
-                            <div class="col-md-12">
-                                <a href="{{ url('/post/view', ['id'=> $post->id]) }}"> {{$post->title}}</a>
+                            <div class="col-md-3">
+                                <img src="{{url($post->picture)}}" style="width: 100%; height: auto; border-radius: 5px;">
                             </div>
-                            <div class="col-md-12 my-post-footer">
-                                Date: {{ $post->created_at->diffForHumans() }}
-                                | {{ $post->comments != null ? count($post->comments) : 0  }} comments
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a href="{{ url('/post/view', ['id'=> $post->id]) }}"> {{$post->title}}</a>
+                                    </div>
+                                    <div class="col-md-12 my-post-footer">
+                                        Date: {{ $post->created_at->diffForHumans() }}
+                                        | {{ $post->comments != null ? count($post->comments) : 0  }} comments
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-3">
+                                    <a href="{{ url('/post/view/'. $post->id) }}"><button class="btn btn-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+                                    <a href="{{ url('/post/edit/'. $post->id) }}"><button class="btn btn-warning btn-sm"><i class="fa fa-edit" aria-hidden="true"></i></button></a>
+                                    <button class="btn btn-danger btn-sm delete"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmModal"
+                                        data-id="{{$post->id}}">
+                                        Delete
+                                    </button>
+                                    <!-- <a href="{{ url('/post/delete/'. $post->id) }}"><button class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button></a> -->
+                                </div>
+
                             </div>
                         </div>
                     @endforeach
@@ -48,7 +67,7 @@
                                 @foreach($myComments as $comment)
                                     <div class="my-post">
                                         <h6>{{ $comment->post->title }}</h6>
-                                        <?php echo($comment->comment); ?>
+                                         {!! $comment->comment !!}
 
                                     </div>
                                 @endforeach
@@ -93,7 +112,7 @@
                                                 $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
                                             }
                                         @endphp
-                                        <p><?php echo(\Illuminate\Support\Str::limit($excerpt, 80, '...'));?></p>
+                                        <p> {!! \Illuminate\Support\Str::limit($excerpt, 80, '...')!!}</p>
                                     </div>
                                     <div class="d-flex border-top">
                                         <small class="flex-fill text-center border-end py-2"><i class="fa-duotone fa-thin fa-user"></i>{{ $blog->user != null ? 'By '. explode(' ', $blog->user->name)[0] : '' }}</small>
@@ -111,6 +130,74 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true" style="margin-top: 200px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    You are about to delete this post ?
+                    <input type="hidden" id="deletePostWithId">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="btn btn-primary delete-post">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+	<script type="text/javascript">
+
+		document.querySelectorAll('.delete').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const id = this.dataset.id;
+                console.log('delete post with id ' + id);
+                const btn = $('#delete-' + id);
+                $('#deletePostWithId').val(id);
+                if (btn.prop('disabled')) return;
+                btn.prop('disabled', true);
+            });
+        });
+
+        document.querySelectorAll('.delete-post').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const btn = $(this);
+                if (btn.prop('disabled')) return;
+                btn.prop('disabled', true);
+                const id = $('#deletePostWithId').val();
+                console.log('Delete post with id ' + id);
+                $.ajax({
+                    type: 'GET',
+                    url: '/post/delete-ajax/'+id,
+                    success: function (data) {
+                        console.log(data);
+                        if(data.isSuccess) window.location.reload();
+                    }
+                });
+                $('#confirmModal').modal('hide');
+            })
+        });
+
+	</script>
+
 </x-main-layout>
 
 <style>

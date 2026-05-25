@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -38,5 +40,86 @@ class AdminController extends Controller
     public function listUsers() {
         $users = User::orderBy('user_type')->paginate(10);
         return view('admin.user-list', compact('users'));
+    }
+
+    public function trashedList() {
+        $trashedPosts = Blog::where('deleted_at', '!=', null)->withTrashed()->get()->take(20);
+        $trashedUsers = User::where('deleted_at', '!=', null)->withTrashed()->get()->take(20);
+        $trashedCategories = BlogCategory::where('deleted_at', '!=', null)->withTrashed()->get()->take(20);
+
+        $data = array('trashedPosts' => $trashedPosts, 'trashedUsers' => $trashedUsers, 'trashedCategories' => $trashedCategories);
+        return view('admin.trashed-list', compact('data'));
+
+    }
+
+    public function restoreFromTrashed($type, $id) {
+        logger('restoreFromTrashed ' . $type . ' - ' . $id);
+        $message = 'Request processing error';
+        try {
+            if ((is_null($type)) || ($id == null)) {
+                logger('Bad request');
+                return redirect()->back()->with('error', 'Category and id required');
+            }
+            if (strtolower($type) == 'category') {
+                $cat = BlogCategory::withTrashed()->where('id', $id)->first();
+                if (!is_null($cat)) {
+                    logger('restoring category');
+                    $cat->restore();
+                }
+            } else if (strtolower($type) == 'post') {
+                $blog = Blog::withTrashed()->where('id', $id)->first();
+                logger('post ' . $blog);
+                if (!is_null($blog)) {
+                    logger('restoring post');
+                    $blog->restore();
+                }
+            }else if (strtolower($type) == 'user') {
+                $user = User::withTrashed()->where('id', $id)->first();
+                if (!is_null($user)) {
+                    logger('restoring user');
+                    $user->restore();
+                }
+            }
+
+            return redirect()->back()->with('success', 'Record restored');
+
+        } catch (Exception $ex) {
+            logger($ex);
+            return redirect()->back()->with('error', $message);
+        }
+
+    }
+
+
+    public function forceDelete($type, $id) {
+        logger('forceDelete ' . $type . ' - ' . $id);
+        $message = 'Request processing error';
+        try {
+            if ((is_null($type)) || ($id == null)) {
+                return redirect()->back()->with('error', 'Category and id required');
+            }
+            if (strtolower($type) == 'category') {
+                $cat = BlogCategory::withTrashed()->where('id', $id)->first();
+                if (!is_null($cat)) {
+                    $cat->forceDelete();
+                }
+            } else if (strtolower($type) == 'post') {
+                $blog = Blog::withTrashed()->where('id', $id)->first();
+                if (!is_null($blog)) {
+                    $blog->forceDelete();
+                }
+            }else if (strtolower($type) == 'user') {
+                $user = User::withTrashed()->where('id', $id)->first();
+                if (!is_null($user)) {
+                    $user->forceDelete();
+                }
+            }
+
+            return redirect()->back()->with('success', 'Record destroyed');
+
+        } catch (Exception $ex) {
+            logger($ex);
+            return redirect()->back()->with('error', $message);
+        }
     }
 }
