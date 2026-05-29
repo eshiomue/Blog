@@ -8,7 +8,8 @@
                         <a href="{{ url('/dashboard') }}" class="btn btn-primary px-3 d-none d-lg-flex">Admin dashboard</a>
                     @endif
 
-                    <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+                    <p>We would love to hear from you.  
+                    If you have questions, suggestions, feedback, or business inquiries, feel free to contact us anytime.</p>
                 </div>
                 <div class="row g-4">
                     <div class="col-12">
@@ -19,7 +20,7 @@
                                         <div class="icon me-3" style="width: 45px; height: 45px;">
                                             <i class="fa fa-map-marker-alt text-primary"></i>
                                         </div>
-                                        <span>123 Street, New York, USA</span>
+                                        <span>123 Street, Lagos, Nigeria</span>
                                     </div>
                                 </div>
                             </div>
@@ -29,7 +30,7 @@
                                         <div class="icon me-3" style="width: 45px; height: 45px;">
                                             <i class="fa fa-envelope-open text-primary"></i>
                                         </div>
-                                        <span>info@example.com</span>
+                                        <span>eshiomueafemikhe@gmail.com</span>
                                     </div>
                                 </div>
                             </div>
@@ -39,7 +40,7 @@
                                         <div class="icon me-3" style="width: 45px; height: 45px;">
                                             <i class="fa fa-phone-alt text-primary"></i>
                                         </div>
-                                        <span>+012 345 6789</span>
+                                        <span>+0234 906 481 7668</span>
                                     </div>
                                 </div>
                             </div>
