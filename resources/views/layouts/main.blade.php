@@ -53,7 +53,7 @@
                     <div class="icon p-2 me-2">
                         <img class="img-fluid" src="img/icon-deal.png" alt="Icon" style="width: 30px; height: 30px;">
                     </div>
-                    <h1 class="m-0 text-primary">Prosper Blog</h1>
+                    <h1 class="m-0 text-primary">𝙿𝚛𝚘𝚜𝚙𝚎𝚛 𝙱𝚕𝚘𝚐</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
