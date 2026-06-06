@@ -64,7 +64,9 @@ class BlogController extends Controller
             $user = User::where('id', Auth::id())->first();
             if ((!is_null($user)) && ($user->isAdmin())) {
                 $blogs = Blog::with('category', 'comments')
-                    ->orderBy('created_at', 'DESC')->paginate(6);
+                    ->orderBy('created_at', 'DESC')
+                    ->where('status', 'active')
+                    ->paginate(6);
                 return view('admin.blog.list-post', compact('blogs'));
             }
             if(Auth::check()){
@@ -73,10 +75,13 @@ class BlogController extends Controller
                     ->orderBy('created_at', 'DESC')->paginate(6);
                 $blogs = Blog::with('category', 'comments')
                     ->where('posted_by', '<>', Auth::id())
+                    ->where('status', 'active')
                     ->orderBy('created_at', 'DESC')->paginate(6);
             } else {
                 $blogs = Blog::with('category', 'comments')
-                    ->orderBy('created_at', 'DESC')->paginate(6);
+                    ->where('status', 'active')
+                    ->orderBy('created_at', 'DESC')
+                    ->paginate(6);
             }
 
             $categories = BlogCategory::paginate(20);
@@ -158,7 +163,9 @@ class BlogController extends Controller
             ->whereHas('category', function($q) use($post) {
                 $q->where('id', $post->category_id);
             })
-            ->where('id', '<>', $id)->orderBy('id','DESC')->get()->take(10);
+            ->where('id', '<>', $id)->orderBy('id','DESC')
+            ->where('status', 'active')
+            ->get()->take(10);
 
         $categories = BlogCategory::all();
         $user = User::where('id', Auth::id())->first();
@@ -169,9 +176,17 @@ class BlogController extends Controller
     }
 
     public function listBlogsInOneCategory($id){
-        $data = BlogCategory::with('blogs', 'blogs.user')->where('id',$id)->first();
+        $category = BlogCategory::find($id);
+        if(is_null($category)) {
+            return redirect()->back()->with('error', 'Category not found');
+        }
+        $blogs = Blog::with('category', 'user')
+        ->where('status', 'active')
+        ->where('category_id',$id)->paginate(12);
         $categories =  BlogCategory::paginate(20);
         $user = User::where('id', Auth::id())->first();
+
+        $data = array('title'=> $category->title . ' blogs', 'blogs'=>$blogs, 'id'=>$id);
         if ((!is_null($user)) && ($user->isAdmin())) {
             return view('admin.blog.view-category-blogs', compact('data', 'categories'));
         }
@@ -207,7 +222,10 @@ class BlogController extends Controller
 
     public function getSearchPostResult(Request $request){
         $search = $request->search;
-        $blogs = Blog::where('title','LIKE','%'.$search.'%')->orWhere('content','LIKE','%'.$search.'%')->get();
+        $blogs = Blog::where('title','LIKE','%'.$search.'%')
+            ->orWhere('content','LIKE','%'.$search.'%')
+            ->where('status', 'active')
+            ->get();
          if (Auth::check()) {
             $user = User::where('id', Auth::id())->first();
             if ((!is_null($user)) && ($user->isAdmin())) {

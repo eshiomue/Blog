@@ -5,7 +5,7 @@
                 <div class="col-lg-6">
                     <div class="text-start mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
                         <h1 class="mb-3">
-                            Active Posts
+                            Pending Posts
                             <a href="{{ url('/post/add-post') }}"><i class="fa fa-plus"></i></a>
                         </h1>
                     </div>
@@ -25,8 +25,8 @@
                                 <th> Posted by</th>
                                 <th> Category </th>
                                 <th> Photo</th>
-                                <th>Comments</th>
-                                <th></th>
+                                <th>Date</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,19 +52,16 @@
                                     <td data-label="Avatar">
                                         <img src=" {!! '/' . $item->picture !!}" width="50" height="50">
                                     </td>
-                                    <td data-label="Comments">
-                                        {{ $item->comments != null ? count($item->comments) : 0 }}
+                                    <td data-label="Date">
+                                        {{ $item->created_at }}
                                     </td>
                                     <td data-label="">
-                                        <a href="/post/view/{!! $item->id !!}" class="btn btn-primary btn-sm">View</a>
-                                        <a href="/post/edit/{!! $item->id !!}" class="btn btn-warning btn-sm">Edit</a>
-
-                                        <button class="btn btn-danger btn-sm delete"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#confirmModal"
-                                            data-id="{{$item->id}}">
-                                            Delete
-                                        </button>
+                                        <select class='change-status' data-id="{{$item->id}}" autocomplete="off">
+                                            <option value="pending" {{ $item->status == 'pending' ? 'selected' : ''}}>Pending</option>
+                                            <option value="active" {{ $item->status == 'active' ? 'selected' : ''}}>Approve</option>
+                                            <option value="rejected" {{ $item->status == 'rejected' ? 'selected' : ''}}>Reject</option>
+                                        </select>
+                                        <span id="changeStatus{{$item->id}}"></span>
                                     </td>
 
                                 </tr>
@@ -80,69 +77,50 @@
         </div>
 	</div>
 
-
-    <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm</h5>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    You are about to delete this post ?
-                    <input type="hidden" id="deletePostWithId">
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-
-                    <button type="button" class="btn btn-primary delete-post">
-                        Delete
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
 	<script type="text/javascript">
 
-		document.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function (e) {
+		document.querySelectorAll('.change-status').forEach(item => {
+            item.addEventListener('change', function (e) {
                 e.preventDefault();
                 const id = this.dataset.id;
-                console.log('delete post with id ' + id);
+                const state = this.value;
+                console.log('Update status of post with id ' + id + ' to ' + state);
                 const btn = $('#delete-' + id);
-                $('#deletePostWithId').val(id);
-                if (btn.prop('disabled')) return;
-                btn.prop('disabled', true);
-            });
-        });
+                $('#changeStatus' + id).html('Please wait');
 
-        document.querySelectorAll('.delete-post').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                const btn = $(this);
-                if (btn.prop('disabled')) return;
-                btn.prop('disabled', true);
-                const id = $('#deletePostWithId').val();
-                console.log('Delete post with id ' + id);
+                var fd = new FormData();
+                fd.append('status', state);
+                fd.append('postId', id);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: '/admin/post/change-status',
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(response){
+                        console.log(JSON.stringify(response));
+                        $('#changeStatus' + id).html(response.message);
+                    },
+                    error:function(error){
+                        console.log(error);
+                        $('#changeStatus' + id).html(error.message);
+                    }
+                });
+
+
+
                 $.ajax({
                     type: 'GET',
-                    url: '/post/delete-ajax/'+id,
+                    url: 'admin/post/change-status/'+id,
                     success: function (data) {
                         console.log(data);
                         if(data.isSuccess) window.location.reload();
                     }
                 });
-                $('#confirmModal').modal('hide');
-            })
+            });
         });
 
 	</script>

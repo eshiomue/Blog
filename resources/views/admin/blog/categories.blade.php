@@ -31,7 +31,7 @@
                             @foreach($categories as $item)
                                 <tr>
                                     <td data-label="#">{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
-                                    <td data-label="Title">  <a href="/category/blogs/{{$item->id}}"> {{$item->title}} </a></td>
+                                    <td data-label="Title">  <a href="/category/{{$item->id}}/blogs"> {{$item->title}} </a></td>
                                     <td data-label="Description">
                                         @php
                                             $excerpt = substr($item->description, 0, 80);

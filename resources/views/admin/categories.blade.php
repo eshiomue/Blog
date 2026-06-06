@@ -27,7 +27,7 @@
                         <tr>
                             <td>{{$count}}</td>
                             <td>
-                                <a href="/category/ {!! $item->id!!}/blogs"> {{$item->title}} </a>
+                                <a href="/category/{!! $item->id!!}/blogs"> {{$item->title}} </a>
                             </td>
                             <td> {{$item->description}} </td>
                                 <td><a href="/categories/ {!! $item->id!!}" class="btn btn-primary">Edit</a></td>

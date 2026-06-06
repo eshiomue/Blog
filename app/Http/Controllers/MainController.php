@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Auth;
 class MainController extends Controller
 {
     public function welcome(){
-        $posts = Blog::with('user', 'category')->orderBy('title')->paginate(12);
+        $posts = Blog::with('user', 'category')
+        ->where('status', 'active')
+        ->orderBy('title')
+        ->paginate(12);
         $categories = BlogCategory::paginate(12);
         return view('welcome', compact('posts', 'categories'));
     }
@@ -50,7 +53,7 @@ class MainController extends Controller
             logger('non-admin user');
             $myPosts = Blog::with('comments', 'category')->where('posted_by', $user->id)->paginate(5);
             $myComments = Comment::with('post')->where('user_id', $user->id)->paginate(5);
-            $latestPosts = Blog::orderBy('created_at', 'DESC')->paginate(12);
+            $latestPosts = Blog::orderBy('created_at', 'DESC')->where('status', 'active')->paginate(12);
             $categories = BlogCategory::paginate(10);
             $profile = Auth::user();
             return view('dashboard', compact('myPosts', 'myComments', 'latestPosts', 'categories', 'profile'));

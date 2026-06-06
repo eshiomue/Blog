@@ -153,8 +153,8 @@
                         <a class="btn btn-link text-white-50" href="">X/Twitter</a>
                         <a class="btn btn-link text-white-50" href="">YouTube</a>
                     </div>
-                    
-                    
+
+
                     <div class="col-lg-3 col-md-6">
                         <h5 class="text-white mb-4">Newsletter</h5>
                         <p>Get News, tech, and lifestyle updates directly in your inbox every week.</p>

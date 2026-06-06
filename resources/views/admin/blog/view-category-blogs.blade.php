@@ -1,11 +1,11 @@
 <x-admin-layout>
 <div class="container-xxl py-5" style="background-color: #ffffff;">
     <div class="container">
-        <h3>Category: {{ $data->title }}</h3>
+        <h3>Category: {{ $data != null ? $data['title'] : '' }}</h3>
 
         <div class="row" style="margin-top: 15px;">
-            @if((!is_null($data->blogs)) && (count($data->blogs) > 0))
-                @foreach($data->blogs as $blog)
+            @if((!is_null($data['blogs'])) && (count($data['blogs']) > 0))
+                @foreach($data['blogs'] as $blog)
                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="property-item rounded overflow-hidden">
                             <div class="position-relative overflow-hidden">
@@ -44,9 +44,9 @@
             @if((!is_null($categories)) || (count($categories) > 0))
                 <div class="row">
                     @foreach($categories as $item)
-                        @if($item->id != $data->id)
+                        @if($item->id != $data['id'])
                             <div class="col-md-3 blog-category">
-                                <a href="/category/ {!! $item->id!!}/blogs">
+                                <a href="/category/{!! $item->id!!}/blogs">
                                     {{$item->title}} - {{$item->blogs_count }} {{ $item->blogs_count > 1 ? 'posts' : 'post' }}
                                 </a>
                             </div>

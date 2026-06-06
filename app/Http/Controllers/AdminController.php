@@ -7,6 +7,7 @@ use App\Models\BlogCategory;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -121,5 +122,51 @@ class AdminController extends Controller
             logger($ex);
             return redirect()->back()->with('error', $message);
         }
+    }
+
+
+    public function listPendingPost () {
+        $blogs = Blog::with('category', 'user')->where('status', 'pending')->paginate(20);
+        return view ('admin.blog.pending-post', compact('blogs'));
+    }
+
+    public function listRejectedPost () {
+        $blogs = Blog::with('category', 'user')->where('status', 'rejected')->paginate(20);
+        return view ('admin.blog.rejected-post', compact('blogs'));
+    }
+
+    public function changePostStatus (Request $request) {
+        logger('changePostStatus ' . json_encode($request));
+
+        $res = array('isSuccess'=>false, 'code'=>500, 'message'=>'Request processing error');
+        try {
+            if (!Auth::check()) {
+                logger('User is not logged in');
+                $res = array('isSuccess'=>false, 'code'=>403, 'message'=>'You must login to perform this action');
+                return response()->json($res);
+            }
+            $user = User::where('id', Auth::id())->first();
+            if ((is_null($user)) || (!$user->isAdmin())) {
+                logger('User is not an admin');
+                $res = array('isSuccess'=>false, 'code'=>403, 'message'=>'You must be an admin to perform this action');
+                return response()->json($res);
+            }
+
+            $post = Blog::where('id', $request->postId)->first();
+            if (is_null($post)) {
+                logger('Post not found');
+                $res = array('isSuccess'=>false, 'code'=>404, 'message'=>'Post not found');
+                return response()->json($res);
+            }
+            $post->status = $request->status;
+            $post->save();
+            $res = array('isSuccess'=>true, 'code'=>200, 'message'=>'Successful');
+            return response()->json($res);
+        } catch (Exception $ex) {
+            logger($ex);
+            $res = array('isSuccess'=>false, 'code'=>500, 'message'=>$ex->getMessage());
+            return response()->json($res);
+        }
+
     }
 }

@@ -18,6 +18,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="apple-touch-icon" sizes="76x76" href="{{asset('assets/img/apple-icon.png')}}">
   <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}">
   <title>
@@ -75,7 +76,24 @@
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Posts</span>
+            <span class="nav-link-text ms-1">Active Posts</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="{{ url('/admin/pending/post') }}">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <!-- <i class="ni ni-credit-card text-dark text-sm opacity-10"></i> -->
+              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Pending  Posts</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="{{ url('/admin/rejected/post') }}">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-world text-danger text-sm"></i>
+            </div>
+            <span class="nav-link-text ms-1">Rejected  Posts</span>
           </a>
         </li>
         <li class="nav-item">
@@ -98,7 +116,7 @@
         <li class="nav-item">
           <a class="nav-link " href="{{ url('/admin/deleted/list') }}">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
+              <i class="ni ni-world text-danger text-sm"></i>
             </div>
             <span class="nav-link-text ms-1">Trashed</span>
           </a>
@@ -170,9 +188,16 @@
 
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
+              <a href="{{url('/post/search')}}">
+                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                </a>
+            </li>
+        </ul>
+
+          <!-- <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <!-- <span class="d-sm-inline d-none">Sign Out</span> -->
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -262,7 +287,7 @@
                 </li>
               </ul>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </nav>
